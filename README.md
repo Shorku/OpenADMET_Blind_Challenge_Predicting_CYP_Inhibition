@@ -7,7 +7,7 @@ Author: Oleg Gromov
 
 Date: Aug 2026 - Nov 2026
 
-# TL;DR
+### TL;DR
 
 The main objective is to field-test learning from the full electronic
 structure of a molecule on the contemporary data in real competition
@@ -15,7 +15,7 @@ conditions to obtain a fair performance and usability assessment. Hence,
 the solution is (for now) constrained to a single model architecture.
 The focus is more on development and research than on benchmaxxing.
 
-# Approach
+### Approach
 
 <img src="https://github.com/Shorku/rhnet2/raw/main/images/intro.jpg" width="801" alt="302">
 
@@ -34,7 +34,7 @@ In the ongoing challenge, I'm evaluating RhNet2TBequi model prototype, which rep
 of the MLP components with SO(3)-equivariant machinery which dramatically reduces the 
 memory footprint (no rotational augmentation needed anymore).
 
-# General plan outline
+### General plan outline
 - 17 Aug 2026 - 24 Sep 2026 (challenge start - intermediate LB): Baseline performance evaluation
     - Fitting and other technical settings, debug, etc.
     - Basic architecture features selection (e.g. depth, pooling options etc.)
