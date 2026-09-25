@@ -31,12 +31,24 @@ promising results in the past **OpenADMET + ExpansionRx Blind Challenge** (e.g. 
 in Human Liver Microsomal Clint prediction). 
 
 In the ongoing challenge, I'm evaluating RhNet2TBequi model prototype, which replaces most
-of the MLP components with SO(3)-equivariant machinery which dramatically reduces the 
+of the MLP components with SO(3)-equivariant machinery and dramatically reduces the 
 memory footprint (no rotational augmentation needed anymore).
 
 ### General plan outline
 - 17 Aug 2026 - 24 Sep 2026 (challenge start - intermediate LB): Baseline performance evaluation
     - Fitting and other technical settings, debug, etc.
     - Basic architecture features selection (e.g. depth, pooling options etc.)
-    - Only the RhNet2TBequi model, only the challenge data
+    - Only the RhNet2TBequi model, only the challenge data, no calibration
 - 25 Sep 2026 - 3 Nov 2026 (LB freeze - challenge ends): Everything else including external data (for sure), ensembles (maybe), etc.
+
+## Phase 1 (17 Aug 2026 - 24 Sep 2026)
+
+The primary Phase 1 objectives are to check whether the whole setup from 
+the massive data generation to test predictions can be deployed in ~1 month and 
+to evaluate the baseline performance. The public LB ranks may sometimes be fishy and 
+are not suitable for baseline assessment. Luckily, the provided official baselines 
+are hard enough for performance comparison (e.g. the TabICL-baseline uses one of 
+winning approaches from the previous blind challenge, while the CheMeleon-baseline
+employs one of de facto standard models in the field). Hence, for the Phase 1, 
+the data is restricted to what is provided by the challenge, calibration and 
+exhaustive fine-tuning are also left for the next phase. 
