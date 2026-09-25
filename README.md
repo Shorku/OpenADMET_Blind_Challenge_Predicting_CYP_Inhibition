@@ -33,3 +33,10 @@ in Human Liver Microsomal Clint prediction).
 In the ongoing challenge, I'm evaluating RhNet2TBequi model prototype, which replaces most
 of the MLP components with SO(3)-equivariant machinery which dramatically reduces the 
 memory footprint (no rotational augmentation needed anymore).
+
+# General plan outline
+- 17 Aug 2026 - 24 Sep 2026 (challenge start - intermediate LB): Baseline performance evaluation
+    - Fitting and other technical settings, debug, etc.
+    - Basic architecture features selection (e.g. depth, pooling options etc.)
+    - Only the RhNet2TBequi model, only the challenge data
+- 25 Sep 2026 - 3 Nov 2026 (LB freeze - challenge ends): Everything else including external data (for sure), ensembles (maybe), etc.
