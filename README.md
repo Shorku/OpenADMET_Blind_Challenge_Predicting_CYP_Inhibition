@@ -39,7 +39,8 @@ memory footprint (no rotational augmentation needed anymore).
     - Fitting and other technical settings, debug, etc.
     - Basic architecture features selection (e.g. depth, pooling options etc.)
     - Only the RhNet2TBequi model, only the challenge data, no calibration
-- 25 Sep 2026 - 3 Nov 2026 (LB freeze - challenge ends): Everything else including external data (for sure), ensembles (maybe), etc.
+- 25 Sep 2026 - 3 Nov 2026 (LB freeze - challenge ends): Everything else including external data (for sure),
+ensembles (maybe), and other mischief (I solemnly swear).
 
 ## Phase 1 (17 Aug 2026 - 24 Sep 2026)
 
@@ -49,6 +50,9 @@ to evaluate the baseline performance. The public LB ranks may sometimes be fishy
 are not suitable for baseline assessment. Luckily, the provided official baselines 
 are hard enough for performance comparison (e.g. the TabICL-baseline uses one of 
 winning approaches from the previous blind challenge, while the CheMeleon-baseline
-employs one of de facto standard models in the field). Hence, for the Phase 1, 
+employs one of the de facto standard models in the field). Hence, for the Phase 1, 
 the data is restricted to what is provided by the challenge, calibration and 
 exhaustive fine-tuning are also left for the next phase. 
+
+17 Aug - 25 Aug: Challenge data analysis and processing, quantum-chemical data preparation. 
+
