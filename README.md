@@ -70,7 +70,7 @@ Challenge data analysis and processing, quantum-chemical data preparation, first
 **Regularization**: None
 
 | Endpoint | local MAE | LB MAE | LB rank | XGB-baseline | LGBM-baseline | CheMeleon-baseline | TabICL-baseline |
-| -:- | -:- | -:- | -:- | -:- | -:- | -:- | -:- |
+| --- | --- | --- | --- | --- | --- | --- | --- |
 | 1A2 | 0.56 | 1.00 | 28 | ✅ | ✅ | ✅ | ⛔️ |
 | 2C9 | 0.42 | 0.59 | 44 | ⛔️ | ✅ | ⛔️ | ⛔️ |
 | 2D6 | 0.65 | 1.82 | 56 | ⛔️ | ⛔️ | ⛔️ | ⛔️ |
