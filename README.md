@@ -58,16 +58,22 @@ exhaustive fine-tuning are also left for the next phase.
 Challenge data analysis and processing, quantum-chemical data preparation, first ever attempt to fit a model prototype (arbitrary setup).
 
 **Model**: 2-layer RhNet2TBequi
+
 **Data**: pIC50 direct inhibition for 3767 molecules (challenge data with fully specified stereochemistry only)
+
 **External data**: None
+
 **Endpoints**: 'CYP1A2_pIC50_direct_inhibition', 'CYP2C9_pIC50_direct_inhibition', 'CYP2D6_pIC50_direct_inhibition', 'CYP3A4_pIC50_direct_inhibition'
+
 **Regime**: 1 multitask model for 4 endpoints
+
 **Regularization**: None
 
 | Endpoint | local MAE | LB MAE | LB rank | XGB-baseline | LGBM-baseline | CheMeleon-baseline | TabICL-baseline |
-| 1A2      | 0.56      | 1.00   | 28      | ✅           | ✅            | ✅                 | ⛔️              |
-| 2C9      | 0.42      | 0.59   | 44      | ⛔️           | ✅            | ⛔️                 | ⛔️              |
-| 2D6      | 0.65      | 1.82   | 56      | ⛔️           | ⛔️            | ⛔️                 | ⛔️              |
-| 3A4      | 0.56      | 0.67   | 42      | ✅           | ⛔️            | ⛔️                 | ⛔️              |
+| -:- | -:- | -:- | -:- | -:- | -:- | -:- | -:- |
+| 1A2 | 0.56 | 1.00 | 28 | ✅ | ✅ | ✅ | ⛔️ |
+| 2C9 | 0.42 | 0.59 | 44 | ⛔️ | ✅ | ⛔️ | ⛔️ |
+| 2D6 | 0.65 | 1.82 | 56 | ⛔️ | ⛔️ | ⛔️ | ⛔️ |
+| 3A4 | 0.56 | 0.67 | 42 | ✅ | ⛔️ | ⛔️ | ⛔️ |
 
 
