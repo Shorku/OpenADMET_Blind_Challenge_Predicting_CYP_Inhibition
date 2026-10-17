@@ -59,7 +59,7 @@ Challenge data analysis and processing, quantum-chemical data preparation, first
 
 **Model**: 2-layer RhNet2TBequi
 
-**Data**: pIC50 direct inhibition for 3767 molecules (challenge data with fully specified stereochemistry only)
+**Data**: pIC50 direct and TDI inhibition for 3767 molecules (challenge data with fully specified stereochemistry only)
 
 **External data**: None
 
@@ -91,11 +91,37 @@ A quick overview of options and choosing model architecture details e.g. depth, 
 
 **Regularization**: None
 
+
 | Endpoint | local MAE | LB MAE | LB rank | XGB-baseline | LGBM-baseline | CheMeleon-baseline | TabICL-baseline |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1A2 |  | 0.96 | 37 | ✅ | ✅ | ✅ | ⛔️ |
-| 2C9 |  | 0.57 | 55 | ✅ | ✅ | ✅ | ⛔️ |
-| 2D6 |  | 1.76 | 68 | ⛔️ | ⛔️ | ⛔️ | ⛔️ |
-| 3A4 |  | 0.61 | 53 | ✅ | ✅ | ⛔️ | ⛔️ |
+| 1A2 | 0.55 | 0.96 | 37 | ✅ | ✅ | ✅ | ⛔️ |
+| 2C9 | 0.42 | 0.57 | 55 | ✅ | ✅ | ✅ | ⛔️ |
+| 2D6 | 0.65 | 1.76 | 68 | ⛔️ | ⛔️ | ⛔️ | ⛔️ |
+| 3A4 | 0.55 | 0.61 | 53 | ✅ | ✅ | ⛔️ | ⛔️ |
 
+### Stage 2 (1 Sep - 4 Sep): Pretrained encoder  
 
+In the previous **OpenADMET PXR Blind Challenge**, I experimented a bit with pretraining, but the results were, to put it mildly, confusing. 
+Here, I explored two alternatives: pretraining with synthetic data (CheMeleon-style, RDKit and quantum-chemical descriptors) and pretraining with some arbitrary abundant ADME data (microsomal intrinsic clearance from ChEMBL in this case). The effect of both these options on the validation metrics turned out to be negligible. However, ADME-pretraining allowed to fit my models 5x faster, while the use of synthetic data in pretraining resulted in 2x... slower convergence. Well, there you go.
+
+### Stage 3 (5 Sep - 24 Sep): Baseline 
+Optimizing performance on the full challenge training data. 
+
+**Model**: 4-layer RhNet2TBequi
+
+**Data**: pIC50 direct and TDI inhibition, single concentration data  (challenge training set only)
+
+**External data**: None
+
+**Endpoints**: 'CYP1A2_pIC50_direct_inhibition', 'CYP2C9_pIC50_direct_inhibition', 'CYP2D6_pIC50_direct_inhibition', 'CYP3A4_pIC50_direct_inhibition', 'CYP2D6_pIC50_TDI_condition', 'CYP3A4_pIC50_TDI_condition', 'CYP1A2_log2fc', 'CYP2C9_log2fc', 'CYP2D6_log2fc', 'CYP3A4_log2fc', 
+
+**Regime**: 3 multitask models
+
+**Regularization**: weight decay, normal noise
+
+| Endpoint | local MAE | LB MAE | LB rank | XGB-baseline | LGBM-baseline | CheMeleon-baseline | TabICL-baseline |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1A2 | 0.50 | 0.88 | 82 | ✅ | ✅ | ✅ | ⛔️ |
+| 2C9 | 0.39 | 0.53 | 122 | ✅ | ✅ | ✅ | ⛔️ |
+| 2D6 | 0.62 | 1.59 | 103 | ✅ | ✅ | ✅ | ⛔️ |
+| 3A4 | 0.49 | 0.53 | 78 | ✅ | ✅ | ✅ | ✅ |
