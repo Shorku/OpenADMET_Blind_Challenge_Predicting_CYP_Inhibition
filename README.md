@@ -76,4 +76,26 @@ Challenge data analysis and processing, quantum-chemical data preparation, first
 | 2D6 | 0.65 | 1.82 | 56 | ⛔️ | ⛔️ | ⛔️ | ⛔️ |
 | 3A4 | 0.56 | 0.67 | 42 | ✅ | ⛔️ | ⛔️ | ⛔️ |
 
+### Stage 1 (26 Aug - 31 Aug): Base model setup 
+A quick overview of options and choosing model architecture details e.g. depth, pooling variants, etc.
+
+**Model**: 4-layer RhNet2TBequi
+
+**Data**: pIC50 direct inhibition for 3767 molecules (challenge data with fully specified stereochemistry only)
+
+**External data**: None
+
+**Endpoints**: 'CYP1A2_pIC50_direct_inhibition', 'CYP2C9_pIC50_direct_inhibition', 'CYP2D6_pIC50_direct_inhibition', 'CYP3A4_pIC50_direct_inhibition', 'CYP2D6_pIC50_TDI_condition', 'CYP3A4_pIC50_TDI_condition'
+
+**Regime**: 1 multitask model for 6 endpoints
+
+**Regularization**: None
+
+| Endpoint | local MAE | LB MAE | LB rank | XGB-baseline | LGBM-baseline | CheMeleon-baseline | TabICL-baseline |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1A2 |  | 0.96 | 37 | ✅ | ✅ | ✅ | ⛔️ |
+| 2C9 |  | 0.57 | 55 | ✅ | ✅ | ✅ | ⛔️ |
+| 2D6 |  | 1.76 | 68 | ⛔️ | ⛔️ | ⛔️ | ⛔️ |
+| 3A4 |  | 0.61 | 53 | ✅ | ✅ | ⛔️ | ⛔️ |
+
 
