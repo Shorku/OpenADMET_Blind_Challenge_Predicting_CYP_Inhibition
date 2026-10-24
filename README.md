@@ -125,3 +125,20 @@ Optimizing performance on the full challenge training data.
 | 2C9 | 0.39 | 0.53 | 122 | ✅ | ✅ | ✅ | ⛔️ |
 | 2D6 | 0.62 | 1.59 | 103 | ✅ | ✅ | ✅ | ⛔️ |
 | 3A4 | 0.49 | 0.53 | 78 | ✅ | ✅ | ✅ | ✅ |
+
+## Phase 2 (25 Sep 2026 - 3 Nov 2026)
+
+In this Phase, I'm mostly experimenting with two options: enhancing the GNN-encoder with external data (Track A) and squeezing more from the molecular embeddings produced by the already trained GNNs (Track B). The first direction requires calculating new data on ~40.000 new molecules. Luckily, the quantum-chemical data generation can be done in parallel with experimentation using the molecular embeddings produced by the models fitted in the previous Phase.
+
+### Track B: Fixed embeddings
+
+#### Stage B.1: Linear
+
+Slight improvement (stability and fitting regime mostly) of the linear predictors on the embeddings produced by the best Phase I models.
+
+| Endpoint | local MAE | LB MAE | LB rank | XGB-baseline | LGBM-baseline | CheMeleon-baseline | TabICL-baseline |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1A2 | n/a | 0.86 | 88 | ✅ | ✅ | ✅ | ⛔️ |
+| 2C9 | n/a | 0.51 | 124 | ✅ | ✅ | ✅ | ⛔️ |
+| 2D6 | n/a | 1.55 | 110 | ✅ | ✅ | ✅ | ✅ |
+| 3A4 | n/a | 0.51 | 75 | ✅ | ✅ | ✅ | ✅ | 
