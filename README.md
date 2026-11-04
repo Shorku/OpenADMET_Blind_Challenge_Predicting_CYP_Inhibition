@@ -42,6 +42,23 @@ memory footprint (no rotational augmentation needed anymore).
 - 25 Sep 2026 - 3 Nov 2026 (LB freeze - challenge ends): Everything else including external data (for sure),
 ensembles (maybe), and other mischief (I solemnly swear).
 
+### Validation
+
+As the cross-validation for the current setup and available resources would
+have severely limited the number of experiments possible within the challenge 
+period, I've opted for a persistent train-val split. The split emulated the
+challenge data story: I've chosen the top 'hits' for CYP1A2, CYP2C9, and CYP3A4 
+endpoints, and their closest analogues (Tanimoto) were selected for the joint 
+validation set i.e. if some molecule is selected for one isoform validation,
+then it was going to be used for validation within all the other isoforms as
+these will typically share a GNN-encoder and such hard split is the only way 
+to avoid leakage. Generally, throughout the challenge the local validation metrics
+for all endpoints but the CYP2D6 remained well-correlated with the public LB metrics.
+Regarding the CYP2D6, it (retrospectively) turns out, that my local validation 
+metrics could have been ignored all the way and an issue is not the particular
+split type as it was a very common problem many other teams experienced. 
+
+
 ## Phase 1 (17 Aug 2026 - 24 Sep 2026)
 
 The primary Phase 1 objectives are to check whether the whole setup from 
