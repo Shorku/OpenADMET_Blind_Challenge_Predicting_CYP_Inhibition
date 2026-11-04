@@ -30,7 +30,9 @@ with cheaper xTB input data (2-3 orders of magnitude). RhNet2TB prototype demons
 promising results in the past **OpenADMET + ExpansionRx Blind Challenge** (e.g. ranked 11-th
 in Human Liver Microsomal Clint prediction). 
 
-In the ongoing challenge, I'm evaluating RhNet2TBequi model prototype, which replaces most
+In the ongoing challenge, I'm evaluating 
+[RhNet2TBequi](https://github.com/Shorku/rhnet2tb/blob/main/rhnet2tbequi.py) 
+model prototype, which replaces most
 of the MLP components with SO(3)-equivariant machinery and dramatically reduces the 
 memory footprint (no rotational augmentation needed anymore).
 
@@ -44,20 +46,70 @@ ensembles (maybe), and other mischief (I solemnly swear).
 
 ### Validation
 
-As the cross-validation for the current setup and available resources would
+As the cross-validation (for the current setup and available resources) would
 have severely limited the number of experiments possible within the challenge 
 period, I've opted for a persistent train-val split. The split emulated the
 challenge data story: I've chosen the top 'hits' for CYP1A2, CYP2C9, and CYP3A4 
-endpoints, and their closest analogues (Tanimoto) were selected for the joint 
-validation set i.e. if some molecule is selected for one isoform validation,
-then it was going to be used for validation within all the other isoforms as
-these will typically share a GNN-encoder and such hard split is the only way 
+endpoints from the challenge data, and their closest analogues (Tanimoto) were 
+selected for the joint validation set i.e. if some molecule is selected for one 
+isoform validation, then it was going to be used for validation within all the other 
+isoforms as these will typically share a GNN-encoder and such hard split is the only way 
 to avoid leakage. Generally, throughout the challenge the local validation metrics
 for all endpoints but the CYP2D6 remained well-correlated with the public LB metrics.
 Regarding the CYP2D6, it (retrospectively) turns out, that my local validation 
 metrics could have been ignored all the way and an issue is not the particular
-split type as it was a very common problem many other teams experienced. 
+split type as it was a very common problem many other teams experienced.
 
+### Data augmentation, aggregation, sampling
+
+The input for a model here is a graph constructed from the density matrix, which 
+is the result of a quantum-chemical calculation (xTB in this case) and is tied to 
+a particular 3D-structure. A molecule may have several 
+energetically accessible conformers i.e. a single label corresponds to multiple
+different input graphs. The number of available conformers may range from 1 
+to... wherever one sets a limit for the conformer generator. In the very basic 
+case, to avoid the overrepresentation of the conformer-rich molecules in the 
+training set, one may e.g. each epoch for each molecule sample at random equal 
+number of conformers, which is the way I used e.g. in the OpenADMET+ExpansionRx Blind Challenge.
+
+Generally, there is a following hierarchy: 
+
+a single data **entry** may correspond to several **enantiomers**,
+
+|__ each **enantiomer** may correspond to several **tautomers**,
+
+|____ each **tautomer** may have several **conformers**,
+
+|______ each **conformer**'s density may be calculated for infinite number of its spatial **orientations**
+
+Here, I used the most straightforward approach: everything is aggregated and sampled by 
+the parent entry's InChIKey. 
+
+#### Rotation
+
+The equivariant implementation made inclusion of multiple differently oriented copies
+of the same structure into the dataset optional. Unlike synthetically rotated 
+densities, the densities that are actually calculated from the rotated structures
+are a reasonable source of numerical noise and can be viewed as a way of regularization.
+The effect of such regularization is especially visible when using small datasets, e.g.
+with 3767 molecules (challenge data with fully specified stereochemistry only) the LB
+metrics changed this way:
+
+| Endpoint | MAE    | R²    | Spearman | Kendall |
+| --- |--------|-------|----------|---------|
+| 1A2 | -0.002⬇️| +0.00⬆️| -0.001🔽️| -0.001🔽️|
+| 2C9 | -0.007⬇️| +0.02⬆️| +0.009⬆️| +0.010⬆️|
+| 2D6 | -0.021⬇️| +0.04⬆️| -0.016🔽️| -0.011🔽️|
+| 3A4 | -0.025⬇️| +0.03⬆️| +0.014⬆️| +0.014⬆️|
+
+Whereas for an encoder trained on a dataset of 39750 molecules (~350,000 unique structures)
+the effect of such augmentation was almost undetectable.
+
+#### Conformers
+
+#### Tautomers
+
+#### Enantiomers
 
 ## Phase 1 (17 Aug 2026 - 24 Sep 2026)
 
