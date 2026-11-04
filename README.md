@@ -167,6 +167,21 @@ The test set contains ~30% entries without a complete stereo specification. Thes
 handled in a straightforward fashion: the prediction for a particular entry is some 
 kind of average of the predictions made for all corresponding enantiomers.
 
+### Multitasking
+
+### Auxiliary targets
+
+### Test predictions aggregation
+
+The model is processing a particular structure while a single test set entry may correspond
+[to dozens of structures](#data-augmentation-aggregation-sampling). I was doing it as 
+follows:
+- weighted average (Boltzmann) of per-conformer predictions -> model's prediction for a molecule
+- median of predictions made for a particular molecule by the whole ensemble of model replicas -> prediction for a molecule
+- harmonic average (taken for the predicted concentrations in mol/l) of the per-enantiomer (molecule) predictions -> prediction for a dataset entry 
+
+Each of these tricks is expected to improve the LB MAE by 0.000-0.002 compared to the plain mean.   
+
 ## Phase 1 (17 Aug 2026 - 24 Sep 2026)
 
 The primary Phase 1 objectives are to check whether the whole setup from 
