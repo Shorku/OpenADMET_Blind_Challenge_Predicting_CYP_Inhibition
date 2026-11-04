@@ -167,17 +167,26 @@ The test set contains ~30% entries without a complete stereo specification. Thes
 handled in a straightforward fashion: the prediction for a particular entry is some 
 kind of average of the predictions made for all corresponding enantiomers.
 
-### Multitasking
+### Endpoints compatibility
+
+By the end of the challenge I was working with two models: one for CYP1A2, CYP2C9, and CYP3A4, and
+the other one for CYP2D6. CYP2C9 and CYP3A4 are somewhat aligned (~0.2), and combining them in a
+single model improves performance for the both endpoints. CYP1A2 is mostly orthogonal (~0.0) to 
+CYP2C9 and CYP3A4 with marginal mutual influence on metrics. It was combined with CYP2C9 and CYP3A4
+only to minimize the number of models to train. CYP2D6 was deliberately separated due to both the
+gradients conflict and metrics deterioration for a joint model. 
 
 ### Auxiliary targets
 
 ### Test predictions aggregation
 
 The model is processing a particular structure while a single test set entry may correspond
-[to dozens of structures](#data-augmentation-aggregation-sampling). I was doing it as 
+[to dozens of structures](#data-augmentation-aggregation-sampling). So the raw predictions should
+be somehow aggregated to produce the final test predictions. I was doing it as 
 follows:
 - weighted average (Boltzmann) of per-conformer predictions -> model's prediction for a molecule
 - median of predictions made for a particular molecule by the whole ensemble of model replicas -> prediction for a molecule
+- only the lowest energy tautomers i.e. single tautomeric form for every enantiomer
 - harmonic average (taken for the predicted concentrations in mol/l) of the per-enantiomer (molecule) predictions -> prediction for a dataset entry 
 
 Each of these tricks is expected to improve the LB MAE by 0.000-0.002 compared to the plain mean.   
