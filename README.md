@@ -277,13 +277,16 @@ Optimizing performance on the full challenge training data.
 
 ## Phase 2 (25 Sep 2026 - 3 Nov 2026)
 
-In this Phase, I'm mostly experimenting with two options: enhancing the GNN-encoder with external data (Track A) and squeezing more from the molecular embeddings produced by the already trained GNNs (Track B). The first direction requires calculating new data on ~40.000 new molecules. Luckily, the quantum-chemical data generation can be done in parallel with experimentation using the molecular embeddings produced by the models fitted in the previous Phase.
+In this Phase, I'm mostly experimenting with two options: 
+squeezing more from the molecular embeddings produced by the already trained GNNs and 
+enhancing the GNN-encoder with external data.
 
-### Track B: Fixed embeddings
+### Fixed embeddings: challenge data
 
-#### Stage B.1: Linear
+#### Linear
 
-Slight improvement (stability and fitting regime mostly) of the linear predictors on the embeddings produced by the best Phase I models.
+Slight improvement (stability and fitting regime mostly) of the linear predictors on 
+the embeddings produced by the best Phase I models.
 
 | Endpoint | local MAE | LB MAE | LB rank | XGB-baseline | LGBM-baseline | CheMeleon-baseline | TabICL-baseline |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -291,3 +294,30 @@ Slight improvement (stability and fitting regime mostly) of the linear predictor
 | 2C9 | n/a | 0.51 | 124 | ✅ | ✅ | ✅ | ⛔️ |
 | 2D6 | n/a | 1.55 | 110 | ✅ | ✅ | ✅ | ✅ |
 | 3A4 | n/a | 0.51 | 75 | ✅ | ✅ | ✅ | ✅ | 
+
+#### TabICL
+``TabICLRegressor`` on top of the embeddings produced by the best Phase I models. 
+Something similar to the TabICL baseline but with RhNet2TBequi instead of Chemeleon.
+
+| Endpoint | local MAE | LB MAE | LB rank | XGB-baseline | LGBM-baseline | CheMeleon-baseline | TabICL-baseline |
+| --- | --- |--------|---------| --- | --- | --- | --- |
+| 1A2 | n/a | 0.88   | 93      | ✅ | ✅ | ✅ | ⛔️ |
+| 2C9 | n/a | 0.49   | 103     | ✅ | ✅ | ✅ | ⛔️ |
+| 2D6 | n/a | 1.58   | 119     | ✅ | ✅ | ✅ | ⛔️ |
+| 3A4 | n/a | 0.50   | 63      | ✅ | ✅ | ✅ | ✅ | 
+
+Compared to the linear predictor:
+
+| Endpoint | MAE       | R²      | Spearman | Kendall  |
+| --- |-----------|---------|---------|----------|
+| 1A2 | +0.017🔼️| -0.02🔽️| -0.001🔽️| -0.001🔽️|
+| 2C9 | -0.019⬇️| +0.04⬆️| +0.013⬆️| +0.017⬆️|
+| 2D6 | +0.037🔼️| -0.07🔽️| +0.032⬆️| +0.031⬆️|
+| 3A4 | -0.008⬇️| +0.01⬆️| +0.003⬆️| +0.004⬆️|
+
+It seems like TabICL improves things that are already pretty good and makes everything 
+even weirder where something is already going wrong.
+
+### External data
+
+Calculated new data on ~40.000 new molecules.
