@@ -85,7 +85,7 @@ a single data **entry** may correspond to several **enantiomers**,
 Here, I used the most straightforward approach: everything is aggregated and sampled by 
 the parent entry's InChIKey. 
 
-#### Rotation
+#### Augmentation with rotated structures
 
 The equivariant implementation made inclusion of multiple differently oriented copies
 of the same structure into the dataset optional. Unlike synthetically rotated 
@@ -105,7 +105,7 @@ metrics changed this way:
 Whereas for an encoder trained on a dataset of 39750 molecules (~350,000 unique structures)
 the effect of such augmentation was almost undetectable. 
 
-#### Conformers
+#### Augmentation with conformers
 
 Each molecule was represented by a set of the lowest energy conformers within 10kJ/mol window,
 that were sampled randomly and equally. No experiments here. Although it may be beneficial to
@@ -115,7 +115,7 @@ the gains to be small and highly case-specific.
 As a side note, it turned out, that the embeddings of two different conformers produced by a trained encoder
 usually deviate significantly, but the linear head will still output almost matching predictions.   
 
-#### Tautomers
+#### Augmentation with tautomers
 
 Augmenting the data with tautomers may be both quite beneficial or very harmful. 
 At the previous PXR Induction challenge I came up with the following (quite conservative)
@@ -139,7 +139,33 @@ Augmentation with tautomers significantly improved the metrics for the most well
 endpoint i.e. CYP3A4, while for the other endpoints Spearman and Kendall got solid gains
 while MAE slightly increased. 
 
-#### Enantiomers
+#### Handling enantiomers
+
+Approximately 40% of the molecules in the challenge data lack the full stereochemistry
+specification which presented me with a dilemma: simply dumping all of this into the 
+training set would mean pushing the (actually chirality-sensitive!!!) model towards full 
+invariance (same label for both enantiomers), whereas ignoring this data would mean 
+wasting lots of potentially useful information. As a compromise, I included this 
+uncompletely specified data as follows:
+- an entry is excluded, if at least one of its enantiomers has its own entry
+- all the enantiomers get the parent entry's identifier and are aggregated together
+
+This way the model could learn on the whole dataset, but the impact of the mixed entries
+was slightly marginalized (the probability of each of their enantiomer's structures to get sampled
+was at least halved compared to the fully specified structures).
+
+| Endpoint | MAE       | R²      | Spearman | Kendall  |
+| --- |-----------|---------|----------|----------|
+| 1A2 | -0.009⬇️| +0.01⬆️| +0.025⬆️| +0.022⬆️|
+| 2C9 | -0.007⬇️| +0.02⬆️| +0.004⬆️| +0.005⬆️|
+| 2D6 | +0.064🔼️| -0.13🔽️| +0.044⬆️| +0.034⬆️|
+| 3A4 | -0.005⬇️| +0.00⬆️| +0.001⬆️| +0.005⬆️|
+
+Solid gains everywhere except for CYP2D6.
+
+The test set contains ~30% entries without a complete stereo specification. These were
+handled in a straightforward fashion: the prediction for a particular entry is some 
+kind of average of the predictions made for all corresponding enantiomers.
 
 ## Phase 1 (17 Aug 2026 - 24 Sep 2026)
 
