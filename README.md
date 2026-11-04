@@ -103,11 +103,41 @@ metrics changed this way:
 | 3A4 | -0.025⬇️| +0.03⬆️| +0.014⬆️| +0.014⬆️|
 
 Whereas for an encoder trained on a dataset of 39750 molecules (~350,000 unique structures)
-the effect of such augmentation was almost undetectable.
+the effect of such augmentation was almost undetectable. 
 
 #### Conformers
 
+Each molecule was represented by a set of the lowest energy conformers within 10kJ/mol window,
+that were sampled randomly and equally. No experiments here. Although it may be beneficial to
+tune e.g. the energy cutoff or to sample according to some distribution say Boltzmann, I expect
+the gains to be small and highly case-specific. 
+
+As a side note, it turned out, that the embeddings of two different conformers produced by a trained encoder
+usually deviate significantly, but the linear head will still output almost matching predictions.   
+
 #### Tautomers
+
+Augmenting the data with tautomers may be both quite beneficial or very harmful. 
+At the previous PXR Induction challenge I came up with the following (quite conservative)
+setup:
+
+- 20kJ/mol energy window
+- max 3-4 jumps while generating the tautomeric structures
+- don't touch C(sp³)
+
+This will usually introduce ~15% new structures and improve the metrics. Here, I used 
+this setup as is and got a slightly controversial results at LB:
+
+| Endpoint | MAE      | R²      | Spearman  | Kendall   |
+| --- |----------|---------|-----------|-----------|
+| 1A2 | +0.005🔼️ | -0.00🔽️ | -0.001🔽️ | -0.002🔽️ |
+| 2C9 | +0.002🔼️ | -0.01🔽️ | +0.003⬆️ | +0.002⬆️ |
+| 2D6 | +0.004🔼️ | -0.01🔽️ | +0.008⬆️ | +0.007⬆️ |
+| 3A4 | -0.007⬇️ | +0.01⬆️ | +0.005⬆️ | +0.006⬆️ |
+
+Augmentation with tautomers significantly improved the metrics for the most well-behaved 
+endpoint i.e. CYP3A4, while for the other endpoints Spearman and Kendall got solid gains
+while MAE slightly increased. 
 
 #### Enantiomers
 
