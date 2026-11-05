@@ -438,10 +438,48 @@ trained on the extended dataset and the challenge dataset only:
 | 2D6 | 61   | 0.8359|1.0494|0.3064|0.3996|0.2684|
 | 3A4 | 30   | 0.3732|0.456|0.7613|0.8704|0.6933|
 
+The ranking improvement compared to the public LB here is deceptive as a large number
+of entries were purged for various reasons. Notably, ST-RAE metric on the total test
+set compared to the public LB improved by 0.01-0.04 everywhere except for CYP2D6, which
+is the only heavily calibrated endpoint. 
+
 ## Conclusions
 
 ### What I did wrong
 
-### More options
+I can, probably, recall only a couple of things I strategically missed on:
+- the choice to minimize MAE and ST-RAE
+of the CYP2D6 model, while retrospectively it is clear that Spearman and Kendall optimization
+plus calibration is the winning approach.
+- I didn't try multitasking with TabICL, which could have been a relatively cheap but 
+highly promising experiment
+
+P.S I totally forgot about the classification track! With the already prepared within 
+regression track embeddings it was a matter of one prompt to try it...
+
+### More unexplored options
+
+- more auxiliary targets like pKaH, LogD, etc.
+- learning 2D6 inhibition from electronic structures of the protonated structures
+- stack more model replicas
+- use less pruning while converting densities to graphs to capture the intermolecular non-bonding interactions
+- dedicated models for every endpoint (maintaining endpoints grouping though)
+- more parameters tuning, e.g. most of the auxiliary targets just got unity weights without further optimization
+
+What unites most of these options is that they are relatively straightforward and just require more
+compute. 
 
 ### So, where We Stand?
+
+Basically, I'm almost done with this particular research project dedicated to the RhNet2 model development.
+The whole thing now:
+- uses cheap input data, i.e. xTB calculation results, so that a dataset for e.g. 40,000 molecules may
+be generated in days on regular machines
+- requires reasonable amount of memory: ~10-15GB VRAM for a 4-layer model, 30-35GB RAM for a dataset of
+35,000-40,000 molecules
+- full deployment including the data preparation fits the 1-2 month timeframe 
+- competitive performance: this mono-architecture solution beats baselines on the challenge data, 
+and scores mid-table when using the public external data 
+- room for improvement: and it is straightforward, just add more compute.
+
+Cheers =)
