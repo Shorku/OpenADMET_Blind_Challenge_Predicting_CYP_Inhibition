@@ -178,6 +178,34 @@ gradients conflict and metrics deterioration for a joint model.
 
 ### Auxiliary targets
 
+- Challenge data: TDI inhibition, log2fc
+- Synthetic: average dipole, average volume
+- External data: AC50 from PubChem and Tox21, IC50 from ChEMBL
+
+Various Emax labels from the challenge data had literally no impact and were not used. The situation
+with the synthetic quantum-chemical descriptors is way more interesting. These are _per se_ 
+harmful (no new information, too easy to predict), e.g. inclusion of the calculated dipole results in 
+something like this: 
+
+| Endpoint | MAE      | R²       | Spearman  | Kendall   |
+| --- |----------|----------|-----------|-----------|
+| 2C9 | +0.007🔼️| -0.01🔽️| -0.014🔽️| -0.012🔽️|
+| 3A4 | +0.018🔼️| -0.04🔽️| -0.034🔽️| -0.030🔽️|
+
+Disastrous, actually. However, the reason I'm using average (over conformers ensemble) dipole 
+and average volume is that these allow to include the test set molecules into the training set!
+And if used for this purpose, the gain is sometimes significant:
+
+| Endpoint | MAE      | R²      | Spearman | Kendall  |
+| --- |----------|---------|----------|----------|
+| 1A2 | +0.001🔼️ | -0.00🔽️ | +0.003⬆️ | +0.003⬆️ |
+| 2C9 | +0.004🔼️ | -0.01🔽️ | -0.008🔽️ | -0.008🔽️ |
+| 2D6 | -0.018⬇️ | +0.03⬆️ | +0.014⬆️ | +0.007⬆️ |
+| 3A4 | -0.020⬇️ | +0.02⬆️ | +0.008⬆️ | +0.009⬆️ |
+
+External data usage as auxiliary targets is just the safest option to include them without the 
+risks of performance deterioration. 
+
 ### Test predictions aggregation
 
 The model is processing a particular structure while a single test set entry may correspond
@@ -318,6 +346,6 @@ Compared to the linear predictor:
 It seems like TabICL improves things that are already pretty good and makes everything 
 even weirder where something is already going wrong.
 
-### External data
+### External data: the cavalry has arrived
 
 Calculated new data on ~40.000 new molecules.
