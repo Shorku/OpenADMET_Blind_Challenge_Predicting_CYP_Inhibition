@@ -367,5 +367,48 @@ even weirder where something is already going wrong.
 
 ### External data: the cavalry has arrived
 
+External data sources:
+- Tox21 CYP screen: ``AC50`` filtered by purity (D,F,I,Z and derived were excluded)
+- PubChem AID 1851, the Veith qHTS panel: ``Fit_LogAC50``, single points and poor fits excluded
+- ChEMBL: curated
 
-Calculated new data on ~40.000 new molecules.
+| Source  | CYP1A2 | CYP2C9 | CYP2C19 | CYP2D6 | CYP3A4 | New mol entries | New structures |
+|---------|--------|--------|---------|--------|--------|-----------------|----------------|
+| Tox21   | 2866   | 2555   | 2724    | 1571   | 1319   | 3779            | 5162           |
+| PubChem | 7893   | 5667   | 6543    | 3214   | 7708   | 12321           | 17264          |
+| ChEMBL  | 521    | 1114   | -       | 1101   | 2199   | 3644            | 4247           |
+| Total   |        |        |         |        |        | 19507           | 26418          |
+
+Each endpoint from each source was used as a separate auxiliary endpoint. 
+
+#### Linear
+
+_Note: the performance of the models trained using the external data will not be compared 
+to the baselines_
+
+Difference of performances of linear predictors on the embeddings produced by the models 
+trained on the extended dataset and the challenge dataset only:  
+
+| Endpoint | MAE       | R²       | Spearman | Kendall  |
+| --- |-----------|----------|----------|----------|
+| 1A2 | +0.002🔼️ | -0.00🔽️ | +0.008⬆️| +0.006⬆️|
+| 2C9 | -0.043⬇️  | +0.05⬆️  | +0.034⬆️ | +0.044⬆️ |
+| 2D6 | -0.059⬇️  | +0.13⬆️  | +0.048⬆️ | +0.033⬆️ |
+| 3A4 | -0.056⬇️  | +0.01⬆️  | +0.023⬆️ | +0.032⬆️ |
+
+### The final results
+
+#### Final setup
+
+#### Public LB
+
+| Endpoint | Rank | ST-RAE |MAE | R²      | Spearman | Kendall  |
+| --- |------------|-------------|------------|---------|---------|----------|
+| 1A2 | 96 | 0.570 | 0.827 | 0.45 | 0.780 | 0.582|
+| 2C9 | 92 | 0.430 | 0.463 | 0.63 | 0.805 | 0.620|
+| 2D6 | 116 | 0.762 | 0.968 | 0.34 | 0.443 | 0.301|
+| 3A4 | 23 | 0.380 | 0.447 | 0.75 | 0.861 | 0.687|
+
+#### Final LB
+
+## Conclusions
