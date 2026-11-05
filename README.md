@@ -467,7 +467,7 @@ regression track embeddings it was a matter of one prompt to try it...
 - more parameters tuning, e.g. most of the auxiliary targets just got unity weights without further optimization
 
 What unites most of these options is that they are relatively straightforward and just require more
-compute. 
+compute for experimentation. 
 
 ### So, where We Stand?
 
@@ -477,7 +477,8 @@ The whole thing now:
 be generated in days on regular machines
 - requires reasonable amount of memory: ~10-15GB VRAM for a 4-layer model, 30-35GB RAM for a dataset of
 35,000-40,000 molecules
-- full deployment including the data preparation fits the 1-2 month timeframe 
+- full deployment including the data preparation fits the 1-2 month timeframe
+- established (at least approximately) fitting and inference regimes
 - competitive performance: this mono-architecture solution beats baselines on the challenge data, 
 and scores mid-table when using the public external data 
 - room for improvement: and it is straightforward, just add more compute.
