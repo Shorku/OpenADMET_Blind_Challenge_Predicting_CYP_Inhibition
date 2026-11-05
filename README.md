@@ -217,7 +217,26 @@ follows:
 - only the lowest energy tautomers i.e. single tautomeric form for every enantiomer
 - harmonic average (taken for the predicted concentrations in mol/l) of the per-enantiomer (molecule) predictions -> prediction for a dataset entry 
 
-Each of these tricks is expected to improve the LB MAE by 0.000-0.002 compared to the plain mean.   
+Each of these tricks is expected to improve the LB MAE by 0.000-0.002 compared to the plain mean.
+
+### Model stability
+
+GNNs are known for their instability and RhNet2 is no exclusion. Though, modelling setup optimization-wise,
+a fixed initialization (e.g. a fixed pretrained encoder) and a fixed seed are not enough when
+it comes to experiments on e.g. expanding the dataset. To reduce the variance of this kind I 
+stacked several model replicas, initially 5 pretrained encoders x 3-4 seeds, and ended up with
+3 pretrained encoders x 3 seeds. 
+
+Performance-wise, averaging over an ensemble of 15 models (5 pretrains x 3 seeds) consistently 
+improved both local and LB MAE by 0.01-0.02 compared to a single model. Removing a couple of
+suspiciously good and bad pretrains further improved MAEs by another 0.01-0.02. Notably, 
+the different sets of endpoints may prefer slightly different sets of pretrains.
+
+From the previous occasional experiments it seems that preparation of another 16-25 pretrained 
+encoders, picking a dozen of the best performing ones and using them to fit a pack of
+~25 models may further improve MAE by at least 0.02 or more. One fit takes ~3h with RTX 5070 Ti, RTX 5080 
+or similar, hence the whole run is one week of compute on a single GPU. Would be worth trying if 
+the aim was just the score optimization. I obviously didn't do it because of different objectives.  
 
 ## Phase 1 (17 Aug 2026 - 24 Sep 2026)
 
