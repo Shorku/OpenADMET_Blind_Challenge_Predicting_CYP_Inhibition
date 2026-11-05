@@ -400,6 +400,26 @@ trained on the extended dataset and the challenge dataset only:
 
 #### Final setup
 
+**Model**: 4-layer RhNet2TBequi
+
+**Data**: pIC50 direct and TDI inhibition, single concentration data
+
+**External data**: Tox21, PubChem, ChEMBL
+
+**Regime**: 2 multitask models
+
+**Regularization**: weight decay, equivariant dropout, normal noise
+
+
+| Endpoint | Predictor       | Shares encoder with | Unspec. stereo entries | Tautomers | Calibration |
+|----------|-----------------|---------------------|------------------------|-----------|-------------|
+| 1A2      | Linear + TabICL¹| 2C9, 3A4            | Yes                    | Yes       | No¹         |
+| 2C9      | TabICL          | 1A2, 3A4            | Yes                    | Yes       | No          |
+| 2D6      | Linear          |                     | No                     | No        | Yes         |
+| 3A4      | TabICL          | 1A2, 2C9            | Yes                    | Yes       | No          |
+
+¹ Learned linear combination 0.965 * Linear + 0.017 TabICL, which is essentially a slight downscaling  
+
 #### Public LB
 
 | Endpoint | Rank | ST-RAE |MAE | R²      | Spearman | Kendall  |
@@ -411,4 +431,17 @@ trained on the extended dataset and the challenge dataset only:
 
 #### Final LB
 
+| Endpoint | Rank | ST-RAE |MAE | R²      | Spearman | Kendall  |
+| --- |------|-------------|------------|---------|---------|----------|
+| 1A2 | 55   | 0.5282|0.8112|0.4676|0.7835|0.5876|
+| 2C9 | 47   | 0.4178|0.5104|0.6342|0.8267|0.6447|
+| 2D6 | 61   | 0.8359|1.0494|0.3064|0.3996|0.2684|
+| 3A4 | 30   | 0.3732|0.456|0.7613|0.8704|0.6933|
+
 ## Conclusions
+
+### What I did wrong
+
+### More options
+
+### So, where We Stand?
