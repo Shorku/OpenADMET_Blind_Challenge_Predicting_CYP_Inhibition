@@ -23,7 +23,41 @@ With _the external data_, it landed mid-table overall and 30th on CYP3A4
 (no calibration for this one btw). Given the objectives, constraints, and a global
 shift towards a massive use of agents, I'm considering the model trials successful.  
 
-
+### Contents
+<!-- TOC -->
+  * [Approach](#approach)
+  * [General plan outline](#general-plan-outline)
+  * [Experiments design](#experiments-design-)
+    * [Validation](#validation)
+    * [Data augmentation, aggregation, sampling](#data-augmentation-aggregation-sampling)
+      * [Augmentation with rotated structures](#augmentation-with-rotated-structures)
+      * [Augmentation with conformers](#augmentation-with-conformers)
+      * [Augmentation with tautomers](#augmentation-with-tautomers)
+      * [Handling enantiomers](#handling-enantiomers)
+    * [Endpoints compatibility](#endpoints-compatibility)
+    * [Auxiliary targets](#auxiliary-targets)
+    * [Test predictions aggregation](#test-predictions-aggregation)
+    * [Model stability](#model-stability)
+  * [Phase 1: Baseline](#phase-1-baseline)
+    * [Stage 0 (17 Aug - 25 Aug): Preliminary](#stage-0-17-aug---25-aug-preliminary-)
+    * [Stage 1 (26 Aug - 31 Aug): Base model setup](#stage-1-26-aug---31-aug-base-model-setup-)
+    * [Stage 2 (1 Sep - 4 Sep): Pretrained encoder](#stage-2-1-sep---4-sep-pretrained-encoder-)
+    * [Stage 3 (5 Sep - 24 Sep): Baseline](#stage-3-5-sep---24-sep-baseline-)
+  * [Phase 2: External data and fixed embeddings](#phase-2-external-data-and-fixed-embeddings)
+    * [Fixed embeddings: challenge data](#fixed-embeddings-challenge-data)
+      * [Linear](#linear)
+      * [TabICL](#tabicl)
+    * [External data: the cavalry has arrived](#external-data-the-cavalry-has-arrived)
+      * [Linear](#linear-1)
+    * [The final results](#the-final-results)
+      * [Final setup](#final-setup)
+      * [Public LB](#public-lb)
+      * [Final LB](#final-lb)
+  * [Conclusions](#conclusions)
+    * [What I did wrong](#what-i-did-wrong)
+    * [More unexplored options](#more-unexplored-options)
+    * [So, where We Stand?](#so-where-we-stand)
+<!-- TOC -->
 
 ## Approach
 
@@ -104,7 +138,7 @@ densities, the densities that are actually calculated from the rotated structure
 are a reasonable source of numerical noise and can be viewed as a way of regularization.
 The effect of such regularization is especially visible when using small datasets, e.g.
 with 3767 molecules (challenge data with fully specified stereochemistry only) the LB
-metrics changed this way:
+metrics changed this way (Δ vs the same setup with no rotated copies):
 
 | Endpoint | MAE    | R²    | Spearman | Kendall |
 | --- |--------|-------|----------|---------|
@@ -137,7 +171,8 @@ setup:
 - don't touch C(sp³)
 
 This will usually introduce ~15% new structures and improve the metrics. Here, I used 
-this setup as is and got a slightly controversial results at LB:
+this setup as is and got a slightly controversial results at LB (Δ vs no tautomer
+augmentation):
 
 | Endpoint | MAE      | R²      | Spearman  | Kendall   |
 | --- |----------|---------|-----------|-----------|
@@ -181,7 +216,7 @@ kind of average of the predictions made for all corresponding enantiomers.
 ### Endpoints compatibility
 
 By the end of the challenge I was working with two models: one for CYP1A2, CYP2C9, and CYP3A4, and
-the other one for CYP2D6. CYP2C9 and CYP3A4 are somewhat aligned (~0.2), and combining them in a
+the other one for CYP2D6. CYP2C9 and CYP3A4 are somewhat aligned (average gradient cosine ~0.2), and combining them in a
 single model improves performance for the both endpoints. CYP1A2 is mostly orthogonal (~0.0) to 
 CYP2C9 and CYP3A4 with marginal mutual influence on metrics. It was combined with CYP2C9 and CYP3A4
 only to minimize the number of models to train. CYP2D6 was deliberately separated due to both the
@@ -494,7 +529,7 @@ regression track embeddings it was a matter of one prompt to try it...
 What unites most of these options is that they are relatively straightforward and just require more
 compute for experimentation. 
 
-### So, where We Stand?
+### So, Where We Stand?
 
 Basically, I'm almost done with this particular research project dedicated to the RhNet2 model development.
 The whole thing now:
