@@ -71,6 +71,9 @@ file: `conf_props.zip`
 
 `Ellips3`:
 
+### Density
+
+Available at [kaggle](https://www.kaggle.com/datasets/oleggromov/cyp-core-full-mixed-taue0-20kj-rot0)
 
 ### Methods
 
