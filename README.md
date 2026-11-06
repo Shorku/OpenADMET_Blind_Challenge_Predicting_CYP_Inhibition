@@ -18,7 +18,7 @@ The focus is more on development and research than on benchmaxxing.
 
 **Results**: _on the challenge data_, the single architecture solution without 
 calibration beats all four official baselines (XGB, LGBM, CheMeleon, TabICL) 
-on CYP3A4 endpoint and three out for four baselines on the other endpoints. 
+on CYP3A4 endpoint and three out of four baselines on the other endpoints. 
 With _the external data_, it landed mid-table overall and 30th on CYP3A4 
 (no calibration for this one btw). Given the objectives, constraints, and a global
 shift towards a massive use of agents, I'm considering the model trials successful.  
