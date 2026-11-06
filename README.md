@@ -1,7 +1,8 @@
 ## OpenADMET Blind Challenge: Predicting CYP Inhibition
 
 The repository contains a description of the solution to the 
-**OpenADMET Blind Challenge: Predicting CYP Inhibition** by the user `Shorku`.
+regression track of the [**OpenADMET Blind Challenge: Predicting CYP Inhibition**]((https://huggingface.co/spaces/openadmet/cyp-challenge)) 
+by the user `Shorku`.
 
 Author: Oleg Gromov
 
@@ -9,13 +10,22 @@ Date: Aug 2026 - Nov 2026
 
 ### TL;DR
 
-The main objective is to field-test learning from the full electronic
+**Objective**:  to field-test learning from the full electronic
 structure of a molecule on the contemporary data in real competition
 conditions to obtain a fair performance and usability assessment. Hence, 
-the solution is (for now) constrained to a single model architecture.
+the solution is constrained to a single model architecture.
 The focus is more on development and research than on benchmaxxing.
 
-### Approach
+**Results**: _on the challenge data_, the single architecture solution without 
+calibration beats all four official baselines (XGB, LGBM, CheMeleon, TabICL) 
+on CYP3A4 endpoint and three out for four baselines on the other endpoints. 
+With _the external data_, it landed mid-table overall and 30th on CYP3A4 
+(no calibration for this one btw). Given the objectives, constraints, and a global
+shift towards a massive use of agents, I'm considering the model trials successful.  
+
+
+
+## Approach
 
 <img src="https://github.com/Shorku/rhnet2/raw/main/images/intro.jpg" width="801" alt="302">
 
@@ -36,13 +46,14 @@ model prototype, which replaces most
 of the MLP components with SO(3)-equivariant machinery and dramatically reduces the 
 memory footprint (no rotational augmentation needed anymore).
 
-### General plan outline
+## General plan outline
 - 17 Aug 2026 - 24 Sep 2026 (challenge start - intermediate LB): Baseline performance evaluation
     - Fitting and other technical settings, debug, etc.
     - Basic architecture features selection (e.g. depth, pooling options etc.)
     - Only the RhNet2TBequi model, only the challenge data, no calibration
-- 25 Sep 2026 - 3 Nov 2026 (LB freeze - challenge ends): Everything else including external data (for sure),
-ensembles (maybe), and other mischief (I solemnly swear).
+- 25 Sep 2026 - 3 Nov 2026 (LB freeze - challenge ends): external data, fixed embeddings.
+
+## Experiments design 
 
 ### Validation
 
@@ -238,7 +249,9 @@ encoders, picking a dozen of the best performing ones and using them to fit a pa
 or similar, hence the whole run is one week of compute on a single GPU. Would be worth trying if 
 the aim was just the score optimization. I obviously didn't do it because of different objectives.  
 
-## Phase 1 (17 Aug 2026 - 24 Sep 2026)
+## Phase 1: Baseline
+ 
+*17 Aug 2026 - 24 Sep 2026 (challenge start - intermediate LB)*
 
 The primary Phase 1 objectives are to check whether the whole setup from 
 the massive data generation to test predictions can be deployed in ~1 month and 
@@ -272,6 +285,8 @@ Challenge data analysis and processing, quantum-chemical data preparation, first
 | 2D6 | 0.65 | 1.82 | 56 | ⛔️ | ⛔️ | ⛔️ | ⛔️ |
 | 3A4 | 0.56 | 0.67 | 42 | ✅ | ⛔️ | ⛔️ | ⛔️ |
 
+*✅ : the baseline is beaten; ⛔️: the baseline holds*
+
 ### Stage 1 (26 Aug - 31 Aug): Base model setup 
 A quick overview of options and choosing model architecture details e.g. depth, pooling variants, etc.
 
@@ -294,6 +309,8 @@ A quick overview of options and choosing model architecture details e.g. depth, 
 | 2C9 | 0.42 | 0.57 | 55 | ✅ | ✅ | ✅ | ⛔️ |
 | 2D6 | 0.65 | 1.76 | 68 | ⛔️ | ⛔️ | ⛔️ | ⛔️ |
 | 3A4 | 0.55 | 0.61 | 53 | ✅ | ✅ | ⛔️ | ⛔️ |
+
+*✅ : the baseline is beaten; ⛔️: the baseline holds*
 
 ### Stage 2 (1 Sep - 4 Sep): Pretrained encoder  
 
@@ -322,7 +339,11 @@ Optimizing performance on the full challenge training data.
 | 2D6 | 0.62 | 1.59 | 103 | ✅ | ✅ | ✅ | ⛔️ |
 | 3A4 | 0.49 | 0.53 | 78 | ✅ | ✅ | ✅ | ✅ |
 
-## Phase 2 (25 Sep 2026 - 3 Nov 2026)
+*✅ : the baseline is beaten; ⛔️: the baseline holds*
+
+## Phase 2: External data and fixed embeddings
+ 
+*25 Sep 2026 - 3 Nov 2026 (LB freeze - challenge ends)*
 
 In this Phase, I'm mostly experimenting with two options: 
 squeezing more from the molecular embeddings produced by the already trained GNNs and 
@@ -342,6 +363,8 @@ the embeddings produced by the best Phase I models.
 | 2D6 | n/a | 1.55 | 110 | ✅ | ✅ | ✅ | ✅ |
 | 3A4 | n/a | 0.51 | 75 | ✅ | ✅ | ✅ | ✅ | 
 
+*✅ : the baseline is beaten; ⛔️: the baseline holds*
+
 #### TabICL
 ``TabICLRegressor`` on top of the embeddings produced by the best Phase I models. 
 Something similar to the TabICL baseline but with RhNet2TBequi instead of Chemeleon.
@@ -352,6 +375,8 @@ Something similar to the TabICL baseline but with RhNet2TBequi instead of Chemel
 | 2C9 | n/a | 0.49   | 103     | ✅ | ✅ | ✅ | ⛔️ |
 | 2D6 | n/a | 1.58   | 119     | ✅ | ✅ | ✅ | ⛔️ |
 | 3A4 | n/a | 0.50   | 63      | ✅ | ✅ | ✅ | ✅ | 
+
+*✅ : the baseline is beaten; ⛔️: the baseline holds*
 
 Compared to the linear predictor:
 
@@ -462,7 +487,7 @@ regression track embeddings it was a matter of one prompt to try it...
 - more auxiliary targets like pKaH, LogD, etc.
 - learning 2D6 inhibition from electronic structures of the protonated structures
 - stack more model replicas
-- use less pruning while converting densities to graphs to capture the intermolecular non-bonding interactions
+- use less pruning while converting densities to graphs to capture the intramolecular non-bonding interactions
 - dedicated models for every endpoint (maintaining endpoints grouping though)
 - more parameters tuning, e.g. most of the auxiliary targets just got unity weights without further optimization
 
