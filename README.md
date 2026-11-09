@@ -87,7 +87,26 @@ memory footprint (no rotational augmentation needed anymore).
     - Only the RhNet2TBequi model, only the challenge data, no calibration
 - 25 Sep 2026 - 3 Nov 2026 (LB freeze - challenge ends): external data, fixed embeddings.
 
-## Experiments design 
+## Experiments design
+
+### Setup and limitations
+
+The whole setup regarding the data handling and model options was intentionally chosen so that 
+the whole challenge could be run using only typically available resources e.g. a regular machine
+(12-24 core CPU, 32-64 GB RAM, RTX 5070 Ti/5080 GPU)
+
+| Setup element                 | This setup                                                                              | Approximately lossless (inferred)                                                      |
+|-------------------------------|-----------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|
+| Internal basis                | 2s2p1d <br> 169-elements emebedding per node <br> (minimal projection quality, ML only) | 5s4p3d <br> 1024-elements emebedding per node <br> (minimal projection quality for QC) |
+| Graph connectivity            | bonds + full connectivity within a conjugated group                                     | + second coordination sphere                                                           |
+| Precision                     | fp16                                                                                    | fp32                                                                                   |
+| Maximum angular momentum (L)  | 2                                                                                       | 4                                                                                      |
+
+This resulted in quite tolerable RAM/storage requirements :~0.1MB/1MB/10GB per graph/dataset entry/challenge dataset,
+while the nearly lossless data handling would have required x20-30 more RAM and storage. 
+The tensor machinery maximal angular momentum her was restricted with 2 and only scalars 
+for higher momenta. As a result the timings were also tolerable: ~250ms/100s/3h per batch (64 graphs)/epoch/run.
+
 
 ### Validation
 
