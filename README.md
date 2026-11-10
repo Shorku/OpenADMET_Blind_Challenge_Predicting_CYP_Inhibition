@@ -28,6 +28,7 @@ shift towards a massive use of agents, I'm considering the model trials successf
   * [Approach](#approach)
   * [General plan outline](#general-plan-outline)
   * [Experiments design](#experiments-design-)
+    * [Setup and limitations](#setup-and-limitations)
     * [Validation](#validation)
     * [Data augmentation, aggregation, sampling](#data-augmentation-aggregation-sampling)
       * [Augmentation with rotated structures](#augmentation-with-rotated-structures)
@@ -53,10 +54,11 @@ shift towards a massive use of agents, I'm considering the model trials successf
       * [Final setup](#final-setup)
       * [Public LB](#public-lb)
       * [Final LB](#final-lb)
+  * [Reproducing it](#reproducing-it)
   * [Conclusions](#conclusions)
     * [What I did wrong](#what-i-did-wrong)
     * [More unexplored options](#more-unexplored-options)
-    * [So, where We Stand?](#so-where-we-stand)
+    * [So, Where We Stand?](#so-where-we-stand)
 <!-- TOC -->
 
 ## Approach
@@ -521,6 +523,12 @@ The ranking improvement compared to the public LB here is deceptive as a large n
 of entries were purged for various reasons. Notably, ST-RAE metric on the total test
 set compared to the public LB improved by 0.01-0.04 everywhere except for CYP2D6, which
 is the only heavily calibrated endpoint. 
+
+## Reproducing it
+
+[kaggle notebook](https://www.kaggle.com/code/oleggromov/train-on-fixed-embeddings-example)
+
+[embeddings](https://www.kaggle.com/datasets/oleggromov/mod3e40s1-embeddings)
 
 ## Conclusions
 
