@@ -21,7 +21,12 @@ calibration beats all four official baselines (XGB, LGBM, CheMeleon, TabICL)
 on CYP3A4 endpoint and three out of four baselines on the other endpoints. 
 With _the external data_, it landed mid-table overall and 30th on CYP3A4 
 (no calibration for this one btw). Given the objectives, constraints, and a global
-shift towards a massive use of agents, I'm considering the model trials successful.  
+shift towards a massive use of agents, I'm considering the model trials successful.
+
+_Edit: the official baselines appear to be using direct inhibition data only, no TDI, no log2FC.
+In my experiments, at least TDI aux targets were always present, hence, neither of them
+provides a clean comparison against the baselines. I will do a clean experiment postmortem 
+and add the results here as soon as possible._
 
 ### Contents
 <!-- TOC -->
@@ -485,7 +490,7 @@ trained on the extended dataset and the challenge dataset only:
 
 **Data**: pIC50 direct and TDI inhibition, single concentration data
 
-**External data**: Tox21, PubChem, ChEMBL
+**External data**: Tox21, PubChem, ChEMBL 
 
 **Regime**: 2 multitask models
 
